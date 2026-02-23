@@ -26,6 +26,7 @@
       imports = [
         inputs.treefmt-nix.flakeModule
         ./crane.nix
+        ./treefmt.nix
       ];
       systems = ["aarch64-darwin" "x86_64-darwin"];
       perSystem = {
