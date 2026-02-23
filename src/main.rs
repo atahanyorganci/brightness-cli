@@ -1,70 +1,8 @@
 use clap::{Parser, Subcommand};
-use core_foundation::base::TCFType;
-use core_foundation::string::CFString;
-use std::ffi::CString;
-use brightness_cli::*;
-
-fn get_display_service() -> Option<io_service_t> {
-    let service_name = CString::new("IODisplayConnect").unwrap();
-    let service = unsafe {
-        IOServiceGetMatchingService(
-            kIOMainPortDefault,
-            IOServiceMatching(service_name.as_ptr()),
-        )
-    };
-    if service == 0 {
-        None
-    } else {
-        Some(service)
-    }
-}
-
-fn brightness_key_cfstring() -> CFString {
-    CFString::new("brightness")
-}
-
-fn get_brightness() -> Result<f32, String> {
-    let service = get_display_service().ok_or("No display service found")?;
-    let mut brightness = 0f32;
-    let key = brightness_key_cfstring();
-    let ret = unsafe {
-        IODisplayGetFloatParameter(
-            service,
-            0,
-            key.as_concrete_TypeRef() as *const brightness_cli::__CFString,
-            &mut brightness,
-        )
-    };
-    unsafe { IOObjectRelease(service) };
-    if ret == 0 {
-        Ok(brightness)
-    } else {
-        Err(format!("IODisplayGetFloatParameter failed: {ret}"))
-    }
-}
-
-fn set_brightness(value: f32) -> Result<f32, String> {
-    let service = get_display_service().ok_or("No display service found")?;
-    let v = value.clamp(0.0, 1.0);
-    let key = brightness_key_cfstring();
-    let ret = unsafe {
-        IODisplaySetFloatParameter(
-            service,
-            0,
-            key.as_concrete_TypeRef() as *const brightness_cli::__CFString,
-            v,
-        )
-    };
-    unsafe { IOObjectRelease(service) };
-    if ret == 0 {
-        Ok(v)
-    } else {
-        Err(format!("IODisplaySetFloatParameter failed: {ret}"))
-    }
-}
+use brightness_cli::{get_brightness, set_brightness};
 
 #[derive(Parser)]
-#[command(name = "brightness", about = "Control display brightness via IOKit")]
+#[command(name = "brightness", about = "Control display brightness via DisplayServices")]
 struct Cli {
     #[command(subcommand)]
     cmd: Cmd,
