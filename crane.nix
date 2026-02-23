@@ -35,27 +35,24 @@
         inherit (craneLibNightly.crateNameFromCargoToml {inherit src;}) version;
         doCheck = false;
       };
-    brightness-cli = craneLibNightly.buildPackage (
+    brightness = craneLibNightly.buildPackage (
       individualCrateArgs
       // {
-        pname = "brightness-cli";
+        pname = "brightness";
         src = src;
       }
     );
   in {
     checks = {
-      # Audit dependencies
-      "brightness-cli-audit" = craneLib.cargoAudit {
+      brightness-audit = craneLib.cargoAudit {
         inherit src;
         advisory-db = inputs.advisory-db;
       };
-
-      # Audit licenses
-      "brightness-cli-deny" = craneLib.cargoDeny {
+      brightness-deny = craneLib.cargoDeny {
         inherit src;
       };
     };
-    packages."brightness-cli" = brightness-cli;
+    packages.brightness = brightness;
     devShells.default = craneLibNightly.devShell {
       checks = self'.checks;
       packages = [rustToolchain pkgs.cargo-watch];

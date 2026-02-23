@@ -1,4 +1,4 @@
-use brightness_cli::{get_brightness, set_brightness};
+use brightness::{get_brightness, set_brightness};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]

@@ -47,7 +47,7 @@
         _module.args = {
           inherit pkgs craneLib;
         };
-        packages.default = self'.packages."brightness-cli";
+        packages.default = self'.packages.brightness;
       };
       flake = {};
     };
