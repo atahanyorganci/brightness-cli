@@ -5,7 +5,8 @@ const MAIN_DISPLAY_ID: i32 = 1;
 
 pub fn get_brightness() -> Result<f32, String> {
     let mut brightness = 0f32;
-    let ret = unsafe { display_services::DisplayServicesGetBrightness(MAIN_DISPLAY_ID, &mut brightness) };
+    let ret =
+        unsafe { display_services::DisplayServicesGetBrightness(MAIN_DISPLAY_ID, &mut brightness) };
     if ret == 0 {
         Ok(brightness)
     } else {
