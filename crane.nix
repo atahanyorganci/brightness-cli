@@ -25,7 +25,7 @@
     commonArgs = {
       inherit src;
       strictDeps = true;
-      buildInputs = [] ++ lib.optionals pkgs.stdenv.isDarwin [pkgs.libiconv];
+      buildInputs = [] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [pkgs.libiconv];
     };
     cargoArtifacts = craneLibNightly.buildDepsOnly commonArgs;
     individualCrateArgs =
